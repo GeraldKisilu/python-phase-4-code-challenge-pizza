@@ -76,11 +76,15 @@ def get_pizzas():
 def assign_restaurant_pizzas():
     data = request.get_json()
     
-    if not data or "pizza_id" not in data or "restaurant_id" not in data:
-        return jsonify({"error": "Validation failed. Missing pizza_id or restaurant_id in request."}), 400
+    if not data or "pizza_id" not in data or "restaurant_id" not in data or "price" not in data:
+        return jsonify({"error": "Validation failed. Missing pizza_id, restaurant_id, or price in request."}), 400
     
     pizza_id = int(data["pizza_id"])
     restaurant_id = int(data["restaurant_id"])
+    price = int(data["price"])  # Ensure price is converted to int
+    
+    if not (1 <= price <= 30):
+        return jsonify({"error": "Validation failed. Price must be between 1 and 30."}), 400
     
     pizza = Pizza.query.get(pizza_id)
     restaurant = Restaurant.query.get(restaurant_id)
@@ -89,7 +93,7 @@ def assign_restaurant_pizzas():
         return jsonify({"error": "Validation failed. Pizza or Restaurant not found."}), 400
     
     new_rp = RestaurantPizza(
-        price=data["price"],
+        price=price,
         restaurant_id=restaurant_id,
         pizza_id=pizza_id
     )
