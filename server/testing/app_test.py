@@ -165,7 +165,7 @@ class TestApp:
             db.session.add(restaurant)
             db.session.commit()
 
-            # price not in 1..30
+            # Test with price < 1
             response = app.test_client().post(
                 '/restaurant_pizzas',
                 json={
@@ -174,10 +174,10 @@ class TestApp:
                     "restaurant_id": restaurant.id,
                 }
             )
-
             assert response.status_code == 400
-            assert response.json['errors'] == ["validation errors"]
+            assert response.json['error'] == "Validation failed. Price must be between 1 and 30"
 
+            # Test with price > 30
             response = app.test_client().post(
                 '/restaurant_pizzas',
                 json={
@@ -186,6 +186,5 @@ class TestApp:
                     "restaurant_id": restaurant.id,
                 }
             )
-
             assert response.status_code == 400
-            assert response.json['errors'] == ["validation errors"]
+            assert response.json['error'] == "Validation failed. Price must be between 1 and 30"
