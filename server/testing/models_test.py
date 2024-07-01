@@ -16,7 +16,7 @@ class TestRestaurantPizza:
                 name=Faker().name(), ingredients="Dough, Sauce, Cheese")
             restaurant = Restaurant(name=Faker().name(), address='Main St')
             db.session.add(pizza)
-            db.session.add(restaurant)
+            db.session.add(restaurant)  
             db.session.commit()
 
             restaurant_pizza_1 = RestaurantPizza(
